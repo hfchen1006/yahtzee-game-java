@@ -1,115 +1,89 @@
-# 335-Final-Project: Yahtzee Game
-### Author: Bryan Frank, Ethan Alter, Frank Chen, Muyang Chen
+# Yahtzee Game (Java, Swing)
 
 ## Overview
-This project implements a Yahtzee game in Java.
-The system models Players, Dice, a Cup to roll the dice, Scoring, and GameBoard management. 
-There are two types of players:
-- **Human**
-- **Computer** (AI, play with human player based on difficulty: easy or hard)
+This project is a turn-based Yahtzee game built in Java using a Swing-based graphical user interface. It supports both human and computer players, complete scoring logic, and end-of-game leaderboard tracking.
 
----
-### How to Play:
-  - You'll be prompted to enter the number of human and computer players.
-  - Computer players come with selectable difficulty modes (Easy/Hard).
-  - Each turn, roll the dice and chose a scoring option or reroll for a better score.
-  - Each player has a max of three rolls per turn
-  - Scores will automatically update after each turn.
-  - Game stats and leaderboard will appear at the end of each game
----
-### Classes:
-
-- **`Dice.java`**
-  Represent a single die.
-  - Can roll to get a random value 1-6.
-  - Used an enum `Value` internally to represent die faces.
-
-- **`Value.java`**
-  Enum representing possible die faces: ONE, TWO, THREE, FOUR, FIVE, SIX.
-
-- **`Cup.java`**
-  Holds and manages multiple `Dice`.  
-  - **inCup**: Dice still active to roll.  
-  - **outCup**: Dice kept (not rolled anymore).  
-  - Can roll all active dice, move dice out of the cup, or reset them.
-
-- **`Score.java`**  
-  Calculates possible scores for a given dice roll.  
-  - Evaluates all Yahtzee categories (e.g., Full House, Straights, Yahtzee, Chance).
-  - Returns a map of category -> score.
-
-- **`Scoreboard.java`**  
-  Manages a player's current scorecard.
-  - Can assign scores to available categories.
-  - Tracks filled and remaining categories.
-  - Can print the current scoreboard.
-
-- **`Player.java`**  
-  Represents a human or computer player.  
-  - Stores a name, a history of game scores, and flags for dice selection.
-  - Tracks how many times a player has rolled in a turn (max 3).
-
-- **`Computer.java`**  
-  Represents a computer-controlled(AI) player.
-  - Has a difficulty setting (`EASY` or `HARD`).
-  - Chooses dice and scoring strategies based on difficulty.
-  - `HARD` tries to maximize points or find special combos (e.g., Full House).
-
-- **`PlayerLibrary.java`**  
-  Keeps a record of all players and their historical scores across games.
-  - Supports adding, removing, ranking players.
-
-- **`GameBoard.java`**  
-  Manages the order of players, keeps track of whose turn it is.
-  - Determines playing order: human players roll to decide, then computers go after.
+This repository is based on a team course project and is included here as part of my personal software portfolio.
 
 ---
 
-- **Error Handling:**  
-  - Code checks for bounds on dice selection.
-  - Scoreboard disallows overwriting a category that has already been filled.
+## My Contribution
+My individual contributions included:
+
+- Implemented scoring logic in `Score.java` and score tracking in `Scoreboard.java`
+- Developed the `Value` enum used for dice representation and game logic
+- Contributed to the `View` class by adapting an AI-generated GUI framework and integrating it with backend game logic
+- Implemented GUI interactions such as dice rolling, scoring actions, and turn-based updates
+- Debugged and improved `GameBoard.java` to ensure correct turn handling and overall game flow
+- Collaborated with teammates to integrate components and ensure system consistency
 
 ---
 
-## Summary of Files
-| File              | Purpose |
-|-------------------|---------|
-| `Dice.java`        | Single dice logic |
-| `Value.java`       | Enum for dice values |
-| `Cup.java`         | Holds multiple dice and manages rolls |
-| `Score.java`       | Calculates possible scores from dice |
-| `Scoreboard.java`  | Tracks scores across categories |
-| `Player.java`      | Represents a human or computer player |
-| `Computer.java`    | Smart AI player logic |
-| `PlayerLibrary.java` | Manages all players' historical scores |
-| `GameBoard.java`   | Manages the list and order of players |
+## Features
+- Human and computer players (Easy and Hard AI)
+- Turn-based dice rolling and reroll system (up to 3 rolls per turn)
+- Full Yahtzee scoring system (all categories supported)
+- Interactive GUI built with Java Swing
+- Score tracking and leaderboard display
+- Win/loss tracking across multiple games
 
 ---
-1. **Computer STRATEGY Interface**
-    - Computer.java designs an interface with roll() and choose() methods. This allows for multiple implementations of the Computer interface based on what difficult is chosen
-2. **Concrete Strategies**
 
-    - **ComputerEasy** (`proj.strategy.ComputerEasy`)  
-      - Uses a lower score threshold (e.g., 5) to decide when to stop rerolling.  
-      - Chooses randomly among legal scoring categories when no high-value combo exists.  
+## Technologies
+- Java
+- Swing (GUI)
+- Object-Oriented Programming (OOP)
+- MVC architecture (Model-View-Controller)
+- Event-driven programming
 
-    - **ComputerHard** (`proj.strategy.ComputerHard`)  
-      - Uses a higher threshold (e.g., 13).  
-      - Prioritizes special combinations (Yahtzee, straights, full house) if threshold met.  
-      - Otherwise picks the category yielding the maximal points.
 ---
-1. **Dice FLYWEIGHT Pattern**
-     - To avoid unnecessary object creation and improve memory efficiency, we applied the Flyweight design pattern for our dice logic. Instead of instantiating a new Dice object each time it's needed, we used a DiceFactory class to manage a shared pool of reusable Dice objects. This pattern ensures that each die is only created once and reused as needed, minimizing memory usage during gameplay.
----
-**Avoidance of antipatterns**
-1. **Encapsulation & Information Hiding**
-    - Each core component (e.g. Dice, Cup, Scoreboard) strictly exposes only the minimal public API needed for clients, while relegating all mutable state and internal algorithms to private members. By bundling  the roll logic, face‐value storage, and reset behavior behind well‐defined method boundaries, we enforce high cohesion within each class and loose coupling between modules. We create copies of any ArrayLists that we return and ensure that the Dice class is immutable to avoid encapsulation issues with escaping Dice references.
-2. **Defensive Programming & Input Validation**
-    - All client‐facing methods validate their inputs and enforce fail‐fast behavior. For example, Scoreboard.setScore(...) checks that the category exists and hasn’t already been scored, throwing an IllegalArgumentException on invalid calls. Constructors and setters guard against null parameters, and public collections are wrapped in Collections.unmodifiable… to prevent callers from injecting malformed data.
----
-**Artificial Intelligence Use**
-  - We used AI to assist in creating the GUI through Swift for our Yahtzee app. AI helped create the framework of our View class and assist in the Swift syntax and features. We then connected this graphic design to our backend functions to add functionality to our GUI.
 
-**Model-View-Controller**
-  - We connected our View class to our pre-established Model class (in the form of **`GameBoard.java`**) and added a Controller class to act as a listener between these classes to display changes in our backend data to the GUI and vise versa. The use of a Controller class in our MVC setup demonstrates the OBSERVER design pattern, where the View reacts to changes in the Model through event-driven updates. The Controller listens for user input (e.g., button clicks or score selections), updates the Model accordingly, and then notifies the View to reflect those changes.
+## How to Run
+1. Open the project in an IDE such as Eclipse or VS Code  
+2. Compile the project  
+3. Run the main class (`View.java`)  
+4. Follow the prompts to start the game  
 
+---
+
+## Project Structure
+- `Dice`, `Value` – dice logic and representation  
+- `Cup` – manages dice rolling and selection  
+- `Score`, `Scoreboard` – scoring logic and tracking  
+- `Player`, `Computer` – player types and AI behavior  
+- `GameBoard` – manages turn order and game state  
+- `View`, `Controller` – GUI and user interaction  
+
+---
+
+## Detailed Design
+
+### Core Classes
+- **Dice.java** – Represents a single die with values from 1–6  
+- **Value.java** – Enum representing die faces  
+- **Cup.java** – Manages dice rolling, holding, and resetting  
+- **Score.java** – Evaluates possible scores across Yahtzee categories  
+- **Scoreboard.java** – Tracks assigned and remaining categories for each player  
+- **Player.java** – Represents human or computer player  
+- **Computer.java** – Implements AI strategies for gameplay  
+- **PlayerLibrary.java** – Stores player records and history  
+- **GameBoard.java** – Controls turn order and overall game flow  
+
+### Design Concepts
+- Object-oriented design with encapsulation and modular class structure  
+- MVC architecture separating game logic and UI  
+- Event-driven programming for user interactions  
+- AI strategies with different difficulty levels  
+
+---
+
+## Team Project Note
+This project was originally developed as part of a team assignment.
+
+Contributors:
+- Bryan Frank  
+- Ethan Alter  
+- Frank Chen  
+- Muyang Chen  
+
+This version is maintained as part of my personal portfolio, with emphasis on my individual contributions listed above.
